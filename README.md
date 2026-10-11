@@ -1,5 +1,7 @@
 # SafeBank v3: persistent database, rate limiting, Kaggle-trained fraud model
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Bhargav-Sadineni/fraud-detection-in-money-transfer)
+
 ## 1. Persistent database (Postgres)
 The app uses **Postgres when `DATABASE_URL` is set**, otherwise a local SQLite file (`bank.db`).
 Tables are created automatically on startup. Rate-limit counters live in the same database.

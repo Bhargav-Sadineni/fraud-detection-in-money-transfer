@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SafeBank · Admin Review Desk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d16;
+      --surface: #111827;
+      --surface-card: rgba(17, 24, 39, 0.85);
+      --surface-border: rgba(255, 255, 255, 0.08);
+      --surface-hover: rgba(255, 255, 255, 0.04);
+      --tx-main: #f3f4f6;
+      --tx-muted: #9ca3af;
+      --tx-faint: #6b7280;
+      --primary: #3b82f6;
+      --primary-glow: rgba(59, 130, 246, 0.25);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.5), 0 0 1px 1px var(--surface-border);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      background: radial-gradient(circle at 50% 0%, #1e1b4b 0%, var(--bg) 70%);
+      color: var(--tx-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    h1, h2, h3, .brand { font-family: 'Outfit', sans-serif; }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: rgba(9, 13, 22, 0.75);
+      border-bottom: 1px solid var(--surface-border);
+    }
+    .header-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      text-decoration: none;
+    }
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #a855f7, #6366f1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .nav-tabs {
+      display: flex;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 4px;
+      border-radius: 12px;
+      border: 1px solid var(--surface-border);
+    }
+    .tab-btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      color: var(--tx-muted);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover { color: #fff; background: var(--surface-hover); }
+    .tab-btn.active { color: #fff; background: var(--primary); }
+    main {
+      max-width: 1080px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 24px 20px 48px;
+      flex: 1;
+    }
+    .card {
+      background: var(--surface-card);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-card);
+      backdrop-filter: blur(10px);
+    }
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    input {
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--surface-border);
+      background: rgba(255, 255, 255, 0.03);
+      color: #fff;
+      font-family: inherit;
+      font-size: 14px;
+    }
+    input:focus { outline: none; border-color: var(--primary); }
+    button, .btn {
+      padding: 10px 18px;
+      border-radius: var(--radius-sm);
+      border: none;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-success { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .btn-danger { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .btn-success:hover { background: var(--success); color: #fff; }
+    .btn-danger:hover { background: var(--danger); color: #fff; }
+    .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
+    .stat-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+    }
+    .stat-label { font-size: 12px; color: var(--tx-muted); margin-bottom: 4px; text-transform: uppercase; }
+    .stat-val { font-size: 24px; font-weight: 700; color: #fff; font-family: 'Outfit', sans-serif; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; text-align: left; }
+    th {
+      padding: 12px 10px;
+      color: var(--tx-muted);
+      border-bottom: 1px solid var(--surface-border);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    td { padding: 12px 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.04); vertical-align: middle; }
+    pre.code-box {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      font-family: monospace;
+      font-size: 13px;
+      color: #93c5fd;
+      white-space: pre-wrap;
+    }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <a href="/" class="brand">
+        <div class="brand-icon">🛡️</div>
+        <span>SafeBank</span>
+        <span style="font-size: 11px; padding: 3px 8px; border-radius: 999px; background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3);">Admin Console</span>
+      </a>
+      <nav class="nav-tabs">
+        <a href="/#home" class="tab-btn">🏠 Home</a>
+        <a href="/#transfer" class="tab-btn">💳 Transfer</a>
+        <a href="/admin" class="tab-btn active">🛡️ Admin</a>
+        <a href="/#health" class="tab-btn">🩺 Health</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2 class="card-title">🛡️ Fraud Analyst Review Desk</h2>
+      <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+        <input id="tok" type="password" value="demo-admin" placeholder="Admin token" style="flex: 1; min-width: 200px;">
+        <button id="btn-admin-load" class="btn btn-primary">Load Dashboard</button>
+      </div>
+      <div id="err" style="color: #f87171; font-size: 13px; margin-top: 8px;"></div>
+    </div>
+
+    <div class="card" id="stats-card">
+      <h2 class="card-title">Transaction Statistics</h2>
+      <div class="grid-stats" id="stats-grid"></div>
+    </div>
+
+    <div class="card">
+      <h2 class="card-title">Held Transfers Awaiting Review</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Sender → Receiver</th>
+              <th>Amount</th>
+              <th>ML Score</th>
+              <th>Rule Score</th>
+              <th>Why Flagged</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="q"></tbody>
+        </table>
+      </div>
+      <p id="empty" style="color: var(--tx-faint); margin-top: 14px; text-align: center;" hidden>
+        ✅ No held transfers currently awaiting review.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2 class="card-title">PaySim AI Model Specifications</h2>
+      <pre id="model" class="code-box"></pre>
+    </div>
+  </main>
+
+  <script>
+    const $ = s => document.querySelector(s);
+    let T = 'demo-admin';
+
+    async function api(path, method = 'GET', body) {
+      const res = await fetch('/api/admin/' + path, {
+        method,
+        headers: { 'Content-Type': 'application/json', 'x-admin-token': T },
+        body: body ? JSON.stringify(body) : undefined
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(typeof data.detail === 'string' ? data.detail : 'Request failed');
+      return data;
+    }
+
+    async function load() {
+      try {
+        $('#err').textContent = '';
+        T = $('#tok').value.trim();
+        const stats = await api('stats');
+        
+        const grid = $('#stats-grid');
+        grid.replaceChildren();
+        const createBox = (label, val, color) => {
+          const d = document.createElement('div');
+          d.className = 'stat-box';
+          d.innerHTML = `<div class="stat-label">${label}</div><div class="stat-val" style="color: ${color || '#fff'}">${val}</div>`;
+          return d;
+        };
+
+        grid.append(createBox('Total Users', stats.users, '#60a5fa'));
+        for (const [st, item] of Object.entries(stats.by_status)) {
+          const color = st === 'COMPLETED' ? '#34d399' : (st === 'HELD' ? '#fbbf24' : '#f87171');
+          grid.append(createBox(`${st} ($${Math.round(item.amount)})`, item.count, color));
+        }
+
+        $('#model').textContent = JSON.stringify(stats.model, null, 2);
+
+        const q = await api('queue');
+        const tb = $('#q');
+        tb.replaceChildren();
+        $('#empty').hidden = (q.length > 0);
+
+        q.forEach(t => {
+          const tr = tb.insertRow();
+          tr.insertCell().textContent = '#' + t.id;
+          tr.insertCell().textContent = t.sender + ' → ' + t.receiver;
+          tr.insertCell().textContent = '$' + t.amount.toFixed(2);
+          tr.insertCell().textContent = t.ml_score;
+          tr.insertCell().textContent = t.rule_score;
+          tr.insertCell().textContent = t.ai_note || (t.reasons || []).join('; ');
+
+          const c = tr.insertCell();
+          c.style.whiteSpace = 'nowrap';
+
+          const btnApprove = document.createElement('button');
+          btnApprove.className = 'btn btn-success';
+          btnApprove.textContent = 'Approve';
+          btnApprove.style.marginRight = '6px';
+          btnApprove.onclick = async () => {
+            try {
+              await api('review', 'POST', { id: t.id, action: 'approve' });
+              load();
+            } catch (e) { $('#err').textContent = e.message; }
+          };
+
+          const btnReject = document.createElement('button');
+          btnReject.className = 'btn btn-danger';
+          btnReject.textContent = 'Reject';
+          btnReject.onclick = async () => {
+            try {
+              await api('review', 'POST', { id: t.id, action: 'reject' });
+              load();
+            } catch (e) { $('#err').textContent = e.message; }
+          };
+
+          c.append(btnApprove, btnReject);
+        });
+
+      } catch (e) {
+        $('#err').textContent = e.message;
+      }
+    }
+
+    $('#btn-admin-load').onclick = load;
+    window.addEventListener('load', load);
+  </script>
+</body>
+</html>

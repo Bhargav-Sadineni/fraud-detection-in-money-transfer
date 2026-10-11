@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: safebank
+    runtime: docker
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ADMIN_TOKEN
+        generateValue: true      # read it in the Render dashboard -> Environment
+      - key: DATABASE_URL        # paste your Neon/Supabase connection string in the dashboard
+        sync: false
+      - key: ANTHROPIC_API_KEY   # optional: Claude-written analyst notes
+        sync: false

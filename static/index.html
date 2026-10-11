@@ -1,0 +1,1058 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SafeBank · AI Fraud Defense & Banking Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d16;
+      --surface: #111827;
+      --surface-card: rgba(17, 24, 39, 0.85);
+      --surface-border: rgba(255, 255, 255, 0.08);
+      --surface-hover: rgba(255, 255, 255, 0.04);
+      --tx-main: #f3f4f6;
+      --tx-muted: #9ca3af;
+      --tx-faint: #6b7280;
+      --primary: #3b82f6;
+      --primary-glow: rgba(59, 130, 246, 0.25);
+      --primary-hover: #2563eb;
+      --success: #10b981;
+      --success-glow: rgba(16, 185, 129, 0.2);
+      --warning: #f59e0b;
+      --warning-glow: rgba(245, 158, 11, 0.2);
+      --danger: #ef4444;
+      --danger-glow: rgba(239, 68, 68, 0.2);
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.5), 0 0 1px 1px var(--surface-border);
+      --shadow-glow: 0 0 25px -5px var(--primary-glow);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      background: radial-gradient(circle at 50% 0%, #172554 0%, var(--bg) 70%);
+      color: var(--tx-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.5;
+    }
+
+    h1, h2, h3, .brand { font-family: 'Outfit', sans-serif; }
+
+    /* Top Navigation Bar */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: rgba(9, 13, 22, 0.75);
+      border-bottom: 1px solid var(--surface-border);
+    }
+    .header-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #2563eb, #38bdf8);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      box-shadow: var(--shadow-glow);
+    }
+    .brand-badge {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(59, 130, 246, 0.15);
+      color: #93c5fd;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    /* Tab Buttons Nav */
+    .nav-tabs {
+      display: flex;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 4px;
+      border-radius: 12px;
+      border: 1px solid var(--surface-border);
+    }
+    .tab-btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      color: var(--tx-muted);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .tab-btn:hover {
+      color: var(--tx-main);
+      background: var(--surface-hover);
+    }
+    .tab-btn.active {
+      color: #fff;
+      background: var(--primary);
+      box-shadow: 0 4px 12px var(--primary-glow);
+    }
+
+    /* Live Cloud Status Pill */
+    .status-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--tx-muted);
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      padding: 5px 12px;
+      border-radius: 999px;
+    }
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success);
+      animation: pulse-dot 2s infinite ease-in-out;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    /* Main Container */
+    main {
+      max-width: 1080px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 24px 20px 48px;
+      flex: 1;
+    }
+
+    /* Notification Banner */
+    .msg-banner {
+      padding: 12px 18px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: slideDown 0.25s ease-out;
+    }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .msg-banner.ok { background: var(--success-glow); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .msg-banner.bad { background: var(--danger-glow); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .msg-banner.warn { background: var(--warning-glow); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+
+    /* Cards */
+    .card {
+      background: var(--surface-card);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-card);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* HOME OVERVIEW HERO & TILES */
+    .hero-banner {
+      text-align: center;
+      padding: 40px 20px;
+      margin-bottom: 30px;
+      background: linear-gradient(180deg, rgba(37, 99, 235, 0.12) 0%, rgba(17, 24, 39, 0) 100%);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius-lg);
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(59, 130, 246, 0.12);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: #93c5fd;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    .hero-title {
+      font-size: clamp(28px, 5vw, 42px);
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -1px;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+    .hero-title span {
+      background: linear-gradient(135deg, #60a5fa, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-sub {
+      font-size: 16px;
+      color: var(--tx-muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Quick Launch Cards Grid */
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .quick-card {
+      background: var(--surface-card);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .quick-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(59, 130, 246, 0.4);
+      box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.7), 0 0 20px rgba(59, 130, 246, 0.15);
+    }
+    .quick-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 16px;
+    }
+    .quick-icon.blue { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+    .quick-icon.purple { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+    .quick-icon.green { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+    .quick-title {
+      font-size: 19px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .quick-desc {
+      font-size: 14px;
+      color: var(--tx-muted);
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+    .quick-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #93c5fd;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+    .quick-card:hover .quick-btn { color: #fff; }
+
+    /* Form Inputs & Buttons */
+    .form-group { margin-bottom: 14px; }
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--tx-muted);
+      margin-bottom: 6px;
+    }
+    input, select {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--surface-border);
+      background: rgba(255, 255, 255, 0.03);
+      color: #fff;
+      font-family: inherit;
+      font-size: 14px;
+      transition: all 0.15s ease;
+    }
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+      background: rgba(255, 255, 255, 0.05);
+    }
+    input::placeholder { color: var(--tx-faint); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border-radius: var(--radius-sm);
+      border: none;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      width: 100%;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 4px 14px var(--primary-glow);
+    }
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--tx-main);
+      border: 1px solid var(--surface-border);
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.12);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    .btn-danger:hover {
+      background: var(--danger);
+      color: #fff;
+    }
+    .btn-success {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .btn-success:hover {
+      background: var(--success);
+      color: #fff;
+    }
+
+    /* Grid Layouts */
+    .row { display: flex; gap: 12px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+    .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
+
+    /* Stat Box */
+    .stat-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+    }
+    .stat-label { font-size: 12px; color: var(--tx-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-val { font-size: 24px; font-weight: 700; color: #fff; font-family: 'Outfit', sans-serif; }
+
+    /* Tables */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; text-align: left; }
+    th {
+      padding: 12px 10px;
+      color: var(--tx-muted);
+      border-bottom: 1px solid var(--surface-border);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    td {
+      padding: 12px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      vertical-align: middle;
+    }
+    tr:last-child td { border-bottom: none; }
+
+    /* Status Tags */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge.COMPLETED { background: var(--success-glow); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge.HELD { background: var(--warning-glow); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge.BLOCKED, .badge.REJECTED { background: var(--danger-glow); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+
+    /* Balance Hero Display */
+    .bal-display {
+      font-size: 42px;
+      font-weight: 700;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      letter-spacing: -1px;
+      margin: 8px 0;
+    }
+
+    /* JSON Display Box */
+    pre.code-box {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      color: #93c5fd;
+      overflow-x: auto;
+      white-space: pre-wrap;
+    }
+
+    [hidden] { display: none !important; }
+
+    footer {
+      border-top: 1px solid var(--surface-border);
+      padding: 20px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--tx-faint);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Sticky Header -->
+  <header>
+    <div class="header-inner">
+      <a href="#home" class="brand" onclick="switchTab('home')">
+        <div class="brand-icon">🏦</div>
+        <span>SafeBank</span>
+        <span class="brand-badge">PaySim AI</span>
+      </a>
+
+      <!-- Direct Navigation Buttons -->
+      <nav class="nav-tabs">
+        <button id="nav-home" class="tab-btn active" onclick="switchTab('home')">🏠 Home</button>
+        <button id="nav-transfer" class="tab-btn" onclick="switchTab('transfer')">💳 Transfer</button>
+        <button id="nav-admin" class="tab-btn" onclick="switchTab('admin')">🛡️ Admin</button>
+        <button id="nav-health" class="tab-btn" onclick="switchTab('health')">🩺 Health</button>
+      </nav>
+
+      <div class="status-pill" id="header-db-status">
+        <div class="status-dot"></div>
+        <span id="db-status-text">Postgres Live</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Notification Banner -->
+  <main>
+    <div id="msg" class="msg-banner" hidden></div>
+
+    <!-- ==================== 1. HOME VIEW ==================== -->
+    <section id="view-home">
+      <div class="hero-banner">
+        <div class="hero-badge">⚡ Kaggle PaySim AI Model · Supabase PostgreSQL Live</div>
+        <h1 class="hero-title">Intelligent Banking &amp; <span>Fraud Defense</span></h1>
+        <p class="hero-sub">Experience real-time financial protection powered by machine learning trained on 2.77 million PaySim transactions.</p>
+      </div>
+
+      <!-- Quick Action Cards (Transfer, Admin, Health from single page) -->
+      <div class="quick-grid">
+        <!-- 1. Transfer Tile -->
+        <div class="quick-card" onclick="switchTab('transfer')">
+          <div>
+            <div class="quick-icon blue">💳</div>
+            <h2 class="quick-title">Transfer &amp; Accounts</h2>
+            <p class="quick-desc">Sign in or register, view your balance, and send money with real-time AI risk scoring.</p>
+          </div>
+          <button class="quick-btn">Launch Transfer View →</button>
+        </div>
+
+        <!-- 2. Admin Tile -->
+        <div class="quick-card" onclick="switchTab('admin')">
+          <div>
+            <div class="quick-icon purple">🛡️</div>
+            <h2 class="quick-title">Fraud Review Desk</h2>
+            <p class="quick-desc">Inspect held transfers awaiting analyst review, approve or reject, and inspect AI model metrics.</p>
+          </div>
+          <button class="quick-btn">Open Admin Console →</button>
+        </div>
+
+        <!-- 3. Health Tile -->
+        <div class="quick-card" onclick="switchTab('health')">
+          <div>
+            <div class="quick-icon green">🩺</div>
+            <h2 class="quick-title">System Health &amp; DB</h2>
+            <p class="quick-desc">Verify the Supabase PostgreSQL connection, check latency, and test live diagnostics.</p>
+          </div>
+          <button class="quick-btn">Check System Health →</button>
+        </div>
+      </div>
+
+      <!-- Live Quick Status Strip -->
+      <div class="card">
+        <h2 class="card-title">System Status Overview</h2>
+        <div class="grid-stats">
+          <div class="stat-box">
+            <div class="stat-label">Database</div>
+            <div class="stat-val" id="home-stat-db" style="color: #34d399;">PostgreSQL</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">AI Fraud Model</div>
+            <div class="stat-val" style="color: #60a5fa;">PaySim ML</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Trained Transactions</div>
+            <div class="stat-val" style="color: #f59e0b;">2.77M</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">PR-AUC Accuracy</div>
+            <div class="stat-val" style="color: #a78bfa;">1.00</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 2. TRANSFER VIEW ==================== -->
+    <section id="view-transfer" hidden>
+      <!-- Auth Form (Shown when logged out) -->
+      <div id="auth-box" class="card" style="max-width: 480px; margin: 0 auto 20px;">
+        <h2 class="card-title" id="atitle">Log in to SafeBank</h2>
+        
+        <div class="form-group">
+          <label class="form-label" for="username">Username</label>
+          <input id="username" placeholder="Username (min 3 chars)" autocomplete="username">
+        </div>
+
+        <div id="regf" hidden>
+          <div class="form-group">
+            <label class="form-label" for="full_name">Full Name</label>
+            <input id="full_name" placeholder="Full legal name">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="email">Email Address</label>
+            <input id="email" type="email" placeholder="name@example.com">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <input id="password" type="password" placeholder="Password (min 8 characters)" autocomplete="current-password">
+        </div>
+
+        <button id="go" class="btn btn-primary" style="margin-bottom: 10px;">Log in</button>
+        <button id="sw" class="btn btn-secondary">Don't have an account? Sign up</button>
+      </div>
+
+      <!-- Dashboard (Shown when logged in) -->
+      <div id="dash-box" hidden>
+        <div class="grid-2">
+          <!-- Balance Card -->
+          <div class="card">
+            <div style="font-size: 14px; color: var(--tx-muted);">Welcome back, <b id="user-name" style="color: #fff;"></b></div>
+            <div class="bal-display" id="user-bal">$0.00</div>
+            <div style="font-size: 13px; color: var(--tx-faint);">Demo balance. New accounts receive $1,000.00 to test transfers and fraud checks.</div>
+            <div class="row" style="margin-top: 16px;">
+              <button id="btn-logout" class="btn btn-secondary">Log out</button>
+              <button id="btn-delete" class="btn btn-danger">Delete account</button>
+            </div>
+          </div>
+
+          <!-- Transfer Card -->
+          <div class="card">
+            <h2 class="card-title">💸 Send Money (Protected by AI)</h2>
+            <div class="form-group">
+              <label class="form-label" for="to">Recipient Username</label>
+              <input id="to" placeholder="e.g. alice, bob, or erin">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="amt">Amount ($)</label>
+              <input id="amt" type="number" min="0.01" step="0.01" placeholder="e.g. 50.00">
+            </div>
+            <button id="btn-send" class="btn btn-primary">Send Transfer Now</button>
+            <div style="font-size: 12px; color: var(--tx-faint); margin-top: 8px;">
+              🛡️ PaySim model inspects drain ratio, mule history, velocity &amp; anomalous behavior in real-time.
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="card">
+          <h2 class="card-title">Recent Transactions</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>From</th>
+                  <th>To</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Date &amp; Time (UTC)</th>
+                </tr>
+              </thead>
+              <tbody id="tx-rows"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 3. ADMIN VIEW ==================== -->
+    <section id="view-admin" hidden>
+      <div class="card">
+        <h2 class="card-title">🛡️ Fraud Analyst Review Desk</h2>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end;">
+          <div class="form-group" style="flex: 1; min-width: 200px; margin-bottom: 0;">
+            <label class="form-label" for="tok">Admin Access Token</label>
+            <input id="tok" type="password" value="demo-admin" placeholder="Admin token">
+          </div>
+          <button id="btn-admin-load" class="btn btn-primary" style="width: auto; padding: 12px 24px;">Load Dashboard</button>
+        </div>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="card" id="admin-stats-card" hidden>
+        <h2 class="card-title">Fraud Operations Overview</h2>
+        <div class="grid-stats" id="admin-stats-grid"></div>
+      </div>
+
+      <!-- Queue Card -->
+      <div class="card" id="admin-queue-card" hidden>
+        <h2 class="card-title">Held Transfers Awaiting Review</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Sender → Receiver</th>
+                <th>Amount</th>
+                <th>ML Score</th>
+                <th>Rule Score</th>
+                <th>Why Flagged</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="admin-queue-rows"></tbody>
+          </table>
+        </div>
+        <p id="admin-empty-queue" style="color: var(--tx-faint); margin-top: 14px; text-align: center;" hidden>
+          ✅ All clear! There are currently no held transfers awaiting review.
+        </p>
+      </div>
+
+      <!-- Model Specs Card -->
+      <div class="card" id="admin-model-card" hidden>
+        <h2 class="card-title">Kaggle PaySim Model Metrics</h2>
+        <pre id="admin-model-json" class="code-box"></pre>
+      </div>
+    </section>
+
+    <!-- ==================== 4. HEALTH VIEW ==================== -->
+    <section id="view-health" hidden>
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+          <h2 class="card-title" style="margin-bottom: 0;">🩺 System Health &amp; Diagnostics</h2>
+          <button id="btn-check-health" class="btn btn-primary" style="width: auto; padding: 8px 18px;" onclick="checkHealth()">Refresh Health</button>
+        </div>
+        <p style="color: var(--tx-muted); font-size: 14px; margin-bottom: 20px;">
+          Real-time diagnostics connecting to your live FastAPI backend and Supabase PostgreSQL instance.
+        </p>
+
+        <div class="grid-stats" style="margin-bottom: 20px;">
+          <div class="stat-box">
+            <div class="stat-label">API Status</div>
+            <div class="stat-val" id="health-api-status" style="color: #34d399;">Healthy</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Database Type</div>
+            <div class="stat-val" id="health-db-type" style="color: #60a5fa;">PostgreSQL</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Ping Latency</div>
+            <div class="stat-val" id="health-latency" style="color: #f59e0b;">-- ms</div>
+          </div>
+        </div>
+
+        <h3 style="font-size: 15px; color: var(--tx-muted); margin-bottom: 8px;">Raw Endpoint Payload (<code>/health</code>):</h3>
+        <pre id="health-payload" class="code-box">Loading health payload...</pre>
+
+        <div style="margin-top: 16px;">
+          <a href="/health" target="_blank" class="btn btn-secondary" style="display: inline-flex; width: auto; text-decoration: none;">
+            Open Raw /health JSON in New Tab ↗
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    SafeBank AI Fraud Defense System · Connected to Supabase PostgreSQL &amp; Kaggle PaySim Machine Learning
+  </footer>
+
+  <script>
+    const $ = s => document.querySelector(s);
+    let regMode = false;
+    let currentTab = 'home';
+
+    // Navigation Switcher
+    function switchTab(tab) {
+      currentTab = tab;
+      window.location.hash = tab;
+      
+      // Update tab button styles
+      ['home', 'transfer', 'admin', 'health'].forEach(t => {
+        const btn = $('#nav-' + t);
+        const view = $('#view-' + t);
+        if (btn) btn.classList.toggle('active', t === tab);
+        if (view) view.hidden = (t !== tab);
+      });
+
+      say(''); // clear banners
+
+      // On-demand actions per tab
+      if (tab === 'transfer') {
+        loadUserSession();
+      } else if (tab === 'admin') {
+        loadAdmin();
+      } else if (tab === 'health') {
+        checkHealth();
+      }
+    }
+
+    // Handle hash on initial page load
+    window.addEventListener('load', () => {
+      const hash = window.location.hash.replace('#', '');
+      if (['home', 'transfer', 'admin', 'health'].includes(hash)) {
+        switchTab(hash);
+      } else {
+        switchTab('home');
+      }
+      checkHealth(); // initial silent health check for header indicator
+    });
+
+    window.addEventListener('hashchange', () => {
+      const hash = window.location.hash.replace('#', '');
+      if (['home', 'transfer', 'admin', 'health'].includes(hash) && hash !== currentTab) {
+        switchTab(hash);
+      }
+    });
+
+    // Alert Banner
+    function say(text, type = 'bad') {
+      const el = $('#msg');
+      if (!text) {
+        el.hidden = true;
+        return;
+      }
+      el.textContent = text;
+      el.className = 'msg-banner ' + (type === true ? 'ok' : type);
+      el.hidden = false;
+    }
+
+    // Generic API Helper
+    async function api(path, method = 'GET', body, headers = {}) {
+      const opts = {
+        method,
+        headers: { 'Content-Type': 'application/json', ...headers },
+        body: body ? JSON.stringify(body) : undefined
+      };
+      const res = await fetch('/api/' + path, opts);
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        let err = 'Request failed';
+        if (typeof data.detail === 'string') {
+          err = data.detail;
+        } else if (Array.isArray(data.detail)) {
+          err = data.detail.map(e => (e.loc ? e.loc[e.loc.length - 1] + ': ' : '') + e.msg).join('; ');
+        }
+        throw new Error(err);
+      }
+      return data;
+    }
+
+    // ================= TRANSFER & AUTH LOGIC =================
+    function toggleAuthMode(isReg) {
+      regMode = isReg;
+      $('#regf').hidden = !isReg;
+      $('#atitle').textContent = isReg ? 'Create a SafeBank Account' : 'Log in to SafeBank';
+      $('#go').textContent = isReg ? 'Sign up & Claim $1,000' : 'Log in';
+      $('#sw').textContent = isReg ? 'Already have an account? Log in' : "Don't have an account? Sign up";
+      say('');
+    }
+    $('#sw').onclick = () => toggleAuthMode(!regMode);
+
+    async function loadUserSession() {
+      try {
+        const u = await api('me');
+        $('#auth-box').hidden = true;
+        $('#dash-box').hidden = false;
+        $('#user-name').textContent = u.full_name + ' (@' + u.username + ')';
+        $('#user-bal').textContent = '$' + u.balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        
+        const txs = await api('transactions');
+        const tb = $('#tx-rows');
+        tb.replaceChildren();
+        if (txs.length === 0) {
+          const tr = tb.insertRow();
+          const td = tr.insertCell();
+          td.colSpan = 5;
+          td.style.textAlign = 'center';
+          td.style.color = 'var(--tx-faint)';
+          td.textContent = 'No transaction history yet.';
+        } else {
+          txs.forEach(t => {
+            const tr = tb.insertRow();
+            tr.insertCell().textContent = t.sender;
+            tr.insertCell().textContent = t.receiver;
+            tr.insertCell().textContent = '$' + t.amount.toFixed(2);
+            const badgeTd = tr.insertCell();
+            const b = document.createElement('span');
+            b.className = 'badge ' + t.status;
+            b.textContent = t.status.toLowerCase();
+            badgeTd.append(b);
+            tr.insertCell().textContent = t.created_at || 'Just now';
+          });
+        }
+      } catch {
+        $('#auth-box').hidden = false;
+        $('#dash-box').hidden = true;
+      }
+    }
+
+    $('#go').onclick = async () => {
+      try {
+        say('');
+        const u = $('#username').value.trim();
+        const p = $('#password').value;
+        if (!u || !p) throw new Error('Please enter both username and password');
+        const payload = { username: u, password: p };
+        if (regMode) {
+          const fn = $('#full_name').value.trim();
+          const em = $('#email').value.trim();
+          if (!fn || !em) throw new Error('Please fill in your full name and email');
+          if (p.length < 8) throw new Error('Password must be at least 8 characters long');
+          payload.full_name = fn;
+          payload.email = em;
+        }
+        await api(regMode ? 'register' : 'login', 'POST', payload);
+        $('#password').value = '';
+        say(regMode ? 'Account created successfully!' : 'Logged in successfully!', 'ok');
+        await loadUserSession();
+      } catch (err) {
+        say(err.message, 'bad');
+      }
+    };
+
+    $('#btn-send').onclick = async () => {
+      try {
+        const to = $('#to').value.trim();
+        const amt = parseFloat($('#amt').value);
+        if (!to || isNaN(amt) || amt <= 0) throw new Error('Please specify a recipient and positive amount');
+        const res = await api('transfer', 'POST', { receiver: to, amount: amt });
+        const isOk = res.status === 'completed';
+        const isHeld = res.status === 'held';
+        say(res.message, isOk ? 'ok' : (isHeld ? 'warn' : 'bad'));
+        $('#amt').value = '';
+        await loadUserSession();
+      } catch (err) {
+        say(err.message, 'bad');
+      }
+    };
+
+    $('#btn-logout').onclick = async () => {
+      await api('logout', 'POST');
+      say('Logged out successfully', 'ok');
+      await loadUserSession();
+    };
+
+    $('#btn-delete').onclick = async () => {
+      const p = prompt('Confirm account deletion by typing your password:');
+      if (!p) return;
+      try {
+        await api('account', 'DELETE', { password: p });
+        say('Your account has been deleted.', 'ok');
+        await loadUserSession();
+      } catch (err) {
+        say(err.message, 'bad');
+      }
+    };
+
+    // ================= ADMIN LOGIC =================
+    async function loadAdmin() {
+      const tok = $('#tok').value.trim();
+      if (!tok) return;
+      try {
+        const h = { 'x-admin-token': tok };
+        const stats = await api('admin/stats', 'GET', undefined, h);
+        
+        // Show cards
+        $('#admin-stats-card').hidden = false;
+        $('#admin-queue-card').hidden = false;
+        $('#admin-model-card').hidden = false;
+
+        // Render Stats
+        const grid = $('#admin-stats-grid');
+        grid.replaceChildren();
+        
+        const createBox = (label, val, color) => {
+          const d = document.createElement('div');
+          d.className = 'stat-box';
+          d.innerHTML = `<div class="stat-label">${label}</div><div class="stat-val" style="color: ${color || '#fff'}">${val}</div>`;
+          return d;
+        };
+
+        grid.append(createBox('Total Users', stats.users, '#60a5fa'));
+        for (const [st, item] of Object.entries(stats.by_status)) {
+          const color = st === 'COMPLETED' ? '#34d399' : (st === 'HELD' ? '#fbbf24' : '#f87171');
+          grid.append(createBox(`${st} ($${Math.round(item.amount)})`, item.count, color));
+        }
+
+        // Render Model info
+        $('#admin-model-json').textContent = JSON.stringify(stats.model, null, 2);
+
+        // Render Queue
+        const q = await api('admin/queue', 'GET', undefined, h);
+        const qRows = $('#admin-queue-rows');
+        qRows.replaceChildren();
+        $('#admin-empty-queue').hidden = (q.length > 0);
+
+        q.forEach(t => {
+          const tr = qRows.insertRow();
+          tr.insertCell().textContent = '#' + t.id;
+          tr.insertCell().textContent = t.sender + ' → ' + t.receiver;
+          tr.insertCell().textContent = '$' + t.amount.toFixed(2);
+          tr.insertCell().textContent = t.ml_score;
+          tr.insertCell().textContent = t.rule_score;
+          
+          const whyTd = tr.insertCell();
+          whyTd.textContent = t.ai_note || (t.reasons && t.reasons.length ? t.reasons.join('; ') : 'High risk score');
+
+          const actTd = tr.insertCell();
+          actTd.style.whiteSpace = 'nowrap';
+
+          const btnApprove = document.createElement('button');
+          btnApprove.className = 'btn btn-success';
+          btnApprove.textContent = 'Approve';
+          btnApprove.style.padding = '6px 12px';
+          btnApprove.style.marginRight = '6px';
+          btnApprove.style.width = 'auto';
+          btnApprove.onclick = async () => {
+            try {
+              await api('admin/review', 'POST', { id: t.id, action: 'approve' }, h);
+              say(`Transfer #${t.id} approved successfully!`, 'ok');
+              loadAdmin();
+            } catch (e) { say(e.message, 'bad'); }
+          };
+
+          const btnReject = document.createElement('button');
+          btnReject.className = 'btn btn-danger';
+          btnReject.textContent = 'Reject';
+          btnReject.style.padding = '6px 12px';
+          btnReject.style.width = 'auto';
+          btnReject.onclick = async () => {
+            try {
+              await api('admin/review', 'POST', { id: t.id, action: 'reject' }, h);
+              say(`Transfer #${t.id} rejected.`, 'warn');
+              loadAdmin();
+            } catch (e) { say(e.message, 'bad'); }
+          };
+
+          actTd.append(btnApprove, btnReject);
+        });
+
+      } catch (err) {
+        say('Admin access: ' + err.message, 'bad');
+      }
+    }
+    $('#btn-admin-load').onclick = loadAdmin;
+
+    // ================= HEALTH LOGIC =================
+    async function checkHealth() {
+      const start = performance.now();
+      try {
+        const res = await fetch('/health');
+        const latency = Math.round(performance.now() - start);
+        const data = await res.json();
+        
+        $('#health-latency').textContent = latency + ' ms';
+        $('#health-api-status').textContent = 'Online';
+        $('#health-db-type').textContent = data.database === 'postgres' ? 'Supabase Postgres' : 'SQLite';
+        $('#health-payload').textContent = JSON.stringify(data, null, 2);
+
+        // Update Header and Home pills
+        if (data.database === 'postgres') {
+          $('#db-status-text').textContent = 'Supabase Online';
+          $('#home-stat-db').textContent = 'Supabase Postgres';
+        } else {
+          $('#db-status-text').textContent = 'SQLite Local';
+          $('#home-stat-db').textContent = 'SQLite';
+        }
+      } catch (err) {
+        $('#health-api-status').textContent = 'Error';
+        $('#health-payload').textContent = 'Failed to connect: ' + err.message;
+      }
+    }
+  </script>
+</body>
+</html>

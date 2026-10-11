@@ -1,0 +1,21 @@
+{
+  "data_source": "kaggle_paysim_csv",
+  "rows": 2770409,
+  "fraud_rate": 0.00296,
+  "test_rows": 28460,
+  "test_frauds": 714,
+  "pr_auc": 1.0,
+  "roc_auc": 1.0,
+  "baseline_logreg_pr_auc": 0.907,
+  "block_threshold": 0.0042,
+  "precision": 0.6593,
+  "recall": 1.0,
+  "confusion": {
+    "tn": 27377,
+    "fp": 369,
+    "fn": 0,
+    "tp": 714
+  },
+  "anomaly_detector_recall_at_top1pct": 0.3824,
+  "sklearn": "1.9.1"
+}
